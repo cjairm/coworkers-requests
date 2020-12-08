@@ -23,7 +23,7 @@ It make use of Docker, Django-Postgres, and React-Typescript-Bootstrap.
 
 # How to use it
 
--   Make sure you have [Docker installed](https://docs.docker.com/docker-for-mac/install/) on your system,
+-   Make sure you have [Docker installed](https://docs.docker.com/engine/install/) on your system,
 -   Download this repo
 -   Navigate in your terminal to the directory you cloned this. The first time you should run: 
 ```

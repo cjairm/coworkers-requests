@@ -23,7 +23,7 @@ const App: FC = () => {
 	const [data, setData] = useState<FormInterface>(initForm);
 
 	useEffect(() => {
-		base("reservations/?order_by=-createdAt")
+		base("reservations/?order_by=createdAt")
 			.list()
 			.then((res: ReservationInterface[]) => {
 				setReservations(res);

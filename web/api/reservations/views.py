@@ -4,7 +4,34 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.utils.datastructures import MultiValueDictKeyError
+from django.core.files.storage import FileSystemStorage
+from django.core.files import File
+import csv, datetime
 
+class ReservationFile(APIView):
+    def post(self, req, format=None):
+        fileData = req.FILES['invitationsFile']
+        if not fileData.name.endswith('.csv'):
+            return Response({"detail": "Not format accepted"}, status=status.HTTP_400_BAD_REQUEST)
+        file_data = fileData.read().decode("utf-8")
+        lines = file_data.split("\n")
+        lst = []
+        for line in lines:
+            row = line.split(",")
+            if (len(row) == 5):
+                sData = {
+                    "firstName": row[0],
+                    "lastName": row[1],
+                    "startTime": datetime.datetime.strptime(row[2], '%m/%d/%y %I:%M %p'),
+                    "endTime": datetime.datetime.strptime(row[3], '%m/%d/%y %I:%M %p'),
+                    "seats": row[4]
+                }
+                s = ReservationSerializer(data=sData)
+                if s.is_valid():
+                    s.save()
+                    lst.append(s.data)
+        return Response(lst, status=status.HTTP_201_CREATED)
 
 class ReservationList(APIView):
     def get(self, request, format=None):

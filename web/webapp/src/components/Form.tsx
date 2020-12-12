@@ -5,11 +5,42 @@ import { FormInterface } from "../utils";
 interface ComponentProps {
 	requestHandler: () => void;
 	setData: Dispatch<SetStateAction<FormInterface>>;
+	getFileHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	sendFileHandler: () => void;
 }
 
-const Form: FC<ComponentProps> = ({ setData, requestHandler }) => {
+const Form: FC<ComponentProps> = ({
+	setData,
+	requestHandler,
+	getFileHandler,
+	sendFileHandler
+}) => {
 	return (
 		<>
+			<div className="row justify-content-center my-2">
+				<div className="col-4 my-2">
+					<label htmlFor="formFile" className="form-label">
+						Choose a file
+					</label>
+					<input
+						className="form-control"
+						type="file"
+						onChange={(e: ChangeEvent<HTMLInputElement>) =>
+							getFileHandler(e)
+						}
+					/>
+
+					<div className="d-grid gap-2 mt-3">
+						<button
+							className="btn btn-primary btn-sm"
+							type="button"
+							onClick={sendFileHandler}
+						>
+							Parse file
+						</button>
+					</div>
+				</div>
+			</div>
 			<div className="row justify-content-center my-2">
 				<div className="col-4">
 					<div className="mb-3">

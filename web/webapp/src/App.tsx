@@ -21,6 +21,7 @@ const App: FC = () => {
 		[]
 	);
 	const [data, setData] = useState<FormInterface>(initForm);
+	const [file, setFile] = useState<any>(null);
 
 	useEffect(() => {
 		base("reservations/?order_by=createdAt")
@@ -36,8 +37,8 @@ const App: FC = () => {
 			.create(data)
 			.then((res: ReservationInterface) => {
 				setReservations((prevState: ReservationInterface[]) => [
-					res,
-					...prevState
+					...prevState,
+					res
 				]);
 			});
 	};
@@ -64,6 +65,33 @@ const App: FC = () => {
 			});
 	};
 
+	const getFileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const f = e ? e.target.files[0] : e.target ? e.target.files[0] : null;
+		setFile({ invitationsFile: f });
+	};
+
+	const sendFileHandler = () => {
+		if (file) {
+			let formData = new FormData();
+
+			for (const name in file) {
+				formData.append(name, file[name]);
+			}
+
+			console.log(file);
+			console.log(formData);
+
+			base("reservations/list/")
+				.create(formData, "None")
+				.then((res: ReservationInterface[]) => {
+					setReservations((prevState: ReservationInterface[]) => [
+						...prevState,
+						...res
+					]);
+				});
+		}
+	};
+
 	return (
 		<>
 			<Navbar />
@@ -75,6 +103,8 @@ const App: FC = () => {
 						<Form
 							requestHandler={createRequestHandler}
 							setData={setData}
+							getFileHandler={getFileHandler}
+							sendFileHandler={sendFileHandler}
 						/>
 						{reservations.map((r: ReservationInterface) => {
 							return (

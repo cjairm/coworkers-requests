@@ -31,13 +31,25 @@ export const useCRUD = (domain: string) =>
 					const resp = await response.json();
 					return resp;
 				},
-				create: async (data: { [key: string]: any }) => {
+				create: async (
+					data: { [key: string]: any },
+					contentType: string = undefined
+				) => {
+					const c = contentType ? contentType : "application/json";
+					let contentTypeObj = {};
+					if (c !== "None") {
+						contentTypeObj = {
+							"Content-Type": c
+						};
+					}
+
 					const response = await fetch(url, {
 						method: "POST",
-						headers: {
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify(data)
+						headers: contentTypeObj,
+						body:
+							c !== "application/json"
+								? (data as any)
+								: JSON.stringify(data)
 					});
 					const resp = await response.json();
 					return resp;
